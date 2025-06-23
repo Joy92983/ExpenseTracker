@@ -35,7 +35,12 @@ import android.net.Uri;
 import androidx.core.content.FileProvider;
 import java.io.File;
 
+import com.google.firebase.auth.FirebaseAuth;
+import android.widget.Button;
+import androidx.appcompat.widget.Toolbar;
 
+import android.view.Menu;
+import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,11 +50,13 @@ public class MainActivity extends AppCompatActivity {
     PieChart pieChart;
     MaterialButton btnReset; // 🔸 Declare here
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         dbHelper = new DBHelper(this);
         balanceText = findViewById(R.id.textViewBalance);
@@ -79,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 editor.putBoolean("night_mode", false);
             }
             editor.apply();
-            recreate(); // Recreate activity to apply theme
+            recreate();
         });
 
         MaterialButton btnExport = findViewById(R.id.btnExport);
@@ -104,14 +111,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
         RecyclerView recyclerView = findViewById(R.id.transactionRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // ✅ Fix: Initialize the class-level adapter, not a local variable
         List<Transaction> transactions = dbHelper.getAllTransactions();
-
         adapter = new TransactionAdapter(this, transactions);
         recyclerView.setAdapter(adapter);
 
@@ -119,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
         fabAdd.setOnClickListener(v ->
                 startActivity(new Intent(this, AddTransactionActivity.class)));
 
-        // 🔸 Reset Button Setup
         btnReset = findViewById(R.id.btnReset);
         btnReset.setOnClickListener(v -> {
             dbHelper.deleteAllTransactions();
@@ -138,22 +140,37 @@ public class MainActivity extends AppCompatActivity {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
                 Transaction t = adapter.getTransactions().get(position);
-                dbHelper.deleteTransaction(t); // You'll implement this
+                dbHelper.deleteTransaction(t);
                 adapter.getTransactions().remove(position);
                 adapter.notifyItemRemoved(position);
-                updateSummary(); // Refresh summary after deletion
+                updateSummary();
             }
         });
         itemTouchHelper.attachToRecyclerView(recyclerView);
-
 
         updateSummary();
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_logout) {
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        // ✅ Safe usage after initialization
         adapter.setTransactions(dbHelper.getAllTransactions());
         updateSummary();
     }
@@ -176,7 +193,6 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fabSummary = findViewById(R.id.fabSummary);
         fabSummary.setOnClickListener(v -> startActivity(new Intent(this, SummaryActivity.class)));
 
-
         ArrayList<PieEntry> entries = new ArrayList<>();
         if (income > 0) entries.add(new PieEntry(income, "Income"));
         if (expense > 0) entries.add(new PieEntry(expense, "Expense"));
@@ -187,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
         pieChart.setData(data);
         pieChart.setCenterText("Income vs Expense");
         pieChart.setUsePercentValues(true);
-        pieChart.invalidate(); // refresh chart
+        pieChart.invalidate();
 
         String month = new SimpleDateFormat("yyyy-MM", Locale.getDefault()).format(new Date());
         List<Transaction> monthTransactions = dbHelper.getTransactionsByMonth(month);
@@ -196,7 +212,5 @@ public class MainActivity extends AppCompatActivity {
         for (Transaction t : monthTransactions) {
             Log.d("MonthlySummary", "Date: " + t.getDate() + ", Amount: " + t.getAmount());
         }
-
-
     }
 }

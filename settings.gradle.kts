@@ -20,7 +20,6 @@ dependencyResolutionManagement {
             url = uri("https://jitpack.io")
         }
     }
-
-    rootProject.name = "Expense Tracker"
-    include(":app")
 }
+rootProject.name = "Expense Tracker"
+include(":app")
