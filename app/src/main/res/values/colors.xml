@@ -7,4 +7,5 @@
         <color name="purple_500">#6200EE</color>
     <color name="purple_700">#6200EE</color>
     <color name="teal_200">#018786</color>
+    <color name="background_soft">#F5F5F5</color>
 </resources>

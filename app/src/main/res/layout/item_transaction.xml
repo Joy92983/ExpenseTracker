@@ -11,8 +11,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:background="@android:color/holo_blue_light"
         android:padding="12dp">
+
+
 
         <!-- Category -->
         <TextView
@@ -27,6 +29,8 @@
             app:layout_constraintEnd_toStartOf="@id/textViewAmount"
             app:layout_constraintHorizontal_bias="0"/>
 
+
+
         <!-- Amount -->
         <TextView
             android:id="@+id/textViewAmount"
@@ -34,10 +38,12 @@
             android:layout_height="wrap_content"
             android:text="KES 0.00"
             android:textSize="16sp"
-            android:textColor="@android:color/holo_red_dark"
+            android:textColor="@color/red"
             android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
+
+
 
         <!-- Note -->
         <TextView
@@ -49,6 +55,20 @@
             android:textColor="@android:color/black"
             app:layout_constraintTop_toBottomOf="@id/textViewCategory"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/textViewType"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:singleLine="true" />
+
+        <!-- Type -->
+        <TextView
+            android:id="@+id/textViewType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Expense"
+            android:textSize="14sp"
+            android:textColor="@android:color/holo_blue_dark"
+            app:layout_constraintTop_toBottomOf="@id/textViewCategory"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="4dp"/>
 
@@ -64,6 +84,11 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"/>
+
+
+
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

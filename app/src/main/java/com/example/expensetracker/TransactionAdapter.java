@@ -44,6 +44,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         holder.note.setText(t.getNote());
         holder.date.setText(t.getDate());
         holder.amount.setText("KES " + t.getAmount());
+        holder.type.setText(t.getType());
 
         // Color: green for income, red for expense
         holder.amount.setTextColor(t.getType().equals("Income") ? 0xFF4CAF50 : 0xFFF44336);
@@ -55,7 +56,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView category, note, date, amount;
+        TextView category, note, date, amount , type;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -63,6 +64,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             note = itemView.findViewById(R.id.textViewNote);
             date = itemView.findViewById(R.id.textViewDate);
             amount = itemView.findViewById(R.id.textViewAmount);
+            type = itemView.findViewById(R.id.textViewType);
+
         }
     }
 }
